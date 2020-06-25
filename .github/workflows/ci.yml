@@ -23,7 +23,7 @@ jobs:
       run: |
         wget https://localproxy-binaries.s3-us-west-2.amazonaws.com/osx/boost_169.zip
         unzip boost_169.zip -d boost_169 || :
-        cd boost_1_69_0
+        cd boost_169
         ./b2 install toolset=clang
     - name: install protobuf
       working-directory: ${{ github.workspace }}
