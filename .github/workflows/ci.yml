@@ -29,9 +29,13 @@ jobs:
     - name: install protobuf
       working-directory: ${{ github.workspace }}
       run: |
-        wget https://localproxy-binaries.s3-us-west-2.amazonaws.com/osx/protobuf-3.6.1.zip
-        unzip protobuf-3.6.1.zip -d protobuf-3.6.1 || :
-        cd protobuf-3.6.1/build_make
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
+        tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
+        cd protobuf-3.6.1
+        mkdir build_make
+        cd build_make
+        cmake ../cmake
+        make
         make install
     - name: install Catch2
       working-directory: ${{ github.workspace }}
