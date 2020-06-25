@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+
+env:
+  PACKAGE_NAME: aws-iot-securetunneling-localproxy
+
+jobs:
+  osx:
+    runs-on: macos-latest
+    steps:
+    - run: |
+        brew install libssl-devel openssl-devel openssl zlib zlibc cmake wget git which
+      name: Install brew dependencies
+    - run: |
+        wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
+        tar xzvf /tmp/boost.tar.gz
+        cd boost_1_69_0
+        ./bootstrap.sh --with-toolset=clang
+        ./b2 install toolset=clang
+      name: install boost
+      working-directory: ${{ github.workspace }}
+    - run: |
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
+        tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
+        cd protobuf-3.6.1
+        mkdir build
+        cd build
+        cmake ../cmake
+        make
+        make install
+      name: install protobuf
+      working-directory: ${{ github.workspace }}
+    - run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        mkdir build
+        cd build
+        cmake ../
+        make
+        make install
+      name: install Catch2
+      working-directory: ${{ github.workspace }}
+    - uses: actions/checkout@v2
+      name: 'Checkout'
+    - run: |
+        cd ${{ github.workspace }}/${{ env.PACKAGE_NAME }}
+        mkdir build
+        cd build
+        cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
+    - uses: actions/upload-artifact@v1
+      with:
+        name: localproxy
+        path: ${{ github.workspace }}/${{ env.PACKAGE_NAME }}/build/bin
+      name: 'Upload Package'
+
+
+      
+    
