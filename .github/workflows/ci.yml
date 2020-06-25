@@ -22,14 +22,14 @@ jobs:
       working-directory: ${{ github.workspace }}
       run: |
         wget https://localproxy-binaries.s3-us-west-2.amazonaws.com/osx/boost_169.zip
-        unzip boost_169.zip -d boost_169
+        unzip boost_169.zip -d boost_169 || :
         cd boost_1_69_0
         ./b2 install toolset=clang
     - name: install protobuf
       working-directory: ${{ github.workspace }}
       run: |
         wget https://localproxy-binaries.s3-us-west-2.amazonaws.com/osx/protobuf-3.6.1.zip
-        unzip protobuf-3.6.1.zip -d protobuf-3.6.1
+        unzip protobuf-3.6.1.zip -d protobuf-3.6.1 || :
         cd protobuf-3.6.1/build_make
         make install
     - name: install Catch2
