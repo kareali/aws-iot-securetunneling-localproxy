@@ -49,7 +49,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
+        cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/ -DProtobuf_LIBRARIES=${{ github.workspace }}/protoc-3.6.1-osx-x86_64/ -DProtobuf_INCLUDE_DIR=${{ github.workspace }}/protoc-3.6.1-osx-x86_64/include
         make
     - uses: actions/upload-artifact@v1
       with:
