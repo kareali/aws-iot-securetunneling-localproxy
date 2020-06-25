@@ -31,9 +31,6 @@ jobs:
       run: |
         wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-osx-x86_64.zip
         unzip protoc-3.6.1-osx-x86_64.zip -d protoc-3.6.1-osx-x86_64 || :
-        mkdir -p /usr/local/include/google
-        mv protoc-3.6.1-osx-x86_64/include/google/protobuf /usr/local/include/google
-        mv protoc-3.6.1-osx-x86_64/bin/protoc /usr/local/bin/
     - name: install Catch2
       working-directory: ${{ github.workspace }}
       run: |
