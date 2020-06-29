@@ -64,11 +64,11 @@ jobs:
     steps:
     - name: Install apt-get dependencies
       run: |
-        apt-get update -y
-        apt-get upgrade -y
-        apt-get install -y build-essential git python3-dev
-        apt-get -y wget tar zlibc libssl-dev openssl cmake python-dev
-        apt-get clean -y
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-get install -y build-essential git python3-dev
+        sudo apt-get -y wget tar zlibc libssl-dev openssl cmake python-dev
+        sudo apt-get clean -y
     - uses: actions/checkout@v2
       name: 'Checkout'
     - name: install boost
@@ -78,7 +78,7 @@ jobs:
         tar xzvf /tmp/boost.tar.gz
         cd boost_1_69_0
         ./bootstrap.sh
-        ./b2 install
+        sudo ./b2 install
     - uses: actions/upload-artifact@v1
       with:
         name: boost_169
@@ -94,7 +94,7 @@ jobs:
         cd build_make
         cmake ../cmake
         make
-        make install
+        sudo make install
     - name: install Catch2
       working-directory: ${{ github.workspace }}
       run: |
@@ -104,7 +104,7 @@ jobs:
         cd build
         cmake ../
         make
-        make install
+        sudo make install
     - name: Building ${{ env.PACKAGE_NAME }}
       working-directory: ${{ github.workspace }}
       run: |
