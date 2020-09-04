@@ -124,6 +124,14 @@ jobs:
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
           ls "C:\Program Files\OpenSSL\bin"
+      - name: 'Install OpenSSL'
+        run: |
+          git clone https://github.com/openssl/openssl.git
+          cd openssl
+          git checkout OpenSSL_1_1_1-stable
+          perl Configure VC-WIN64A
+          nmake
+          nmake install
           $env:Path += ";C:\Program Files\OpenSSL\bin"          
       - name: "Install Boost"
         run: |
