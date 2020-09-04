@@ -103,8 +103,9 @@ jobs:
   windows:
     runs-on: windows-2019
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@v2
+#       - name: 'Checkout'
+#         uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
       - name: 'Install ZLIP'
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
