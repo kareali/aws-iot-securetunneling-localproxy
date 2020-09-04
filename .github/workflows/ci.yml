@@ -108,7 +108,8 @@ jobs:
         run: |
           Invoke-WebRequest "https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip" -OutFile "nasm-2.15.05-win64.zip"
           Expand-Archive "nasm-2.15.05-win64.zip" -Force -DestinationPath "C:\NASM"
-          ls "C:\NASM"
+          ls "C:\NASM\nasm-2.15.05\"
+          ls "C:\NASM\nasm-2.15.05\nasm-2.15.05\"
           git clone https://github.com/openssl/openssl.git
           cd openssl
           git checkout OpenSSL_1_1_1-stable
