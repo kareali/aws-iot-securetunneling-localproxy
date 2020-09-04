@@ -104,6 +104,17 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
+      - name: 'Install OpenSSL'
+        run: |
+          Invoke-WebRequest "https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-installer-x64.exe" -OutFile "nasm-2.15.05-installer-x64.exe"
+          Start-Process -FilePath ".\nasm-2.15.05-installer-x64.exe" -Verb runAs -ArgumentList '/s','/v"/qn"'
+          git clone https://github.com/openssl/openssl.git
+          cd openssl
+          git checkout OpenSSL_1_1_1-stable
+          perl Configure VC-WIN64A
+          nmake
+          nmake install
+          $env:Path += ";C:\Program Files\OpenSSL\bin"
       - name: 'Install Catch2'
         run: |
           git clone https://github.com/catchorg/Catch2.git
@@ -124,15 +135,6 @@ jobs:
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
           ls "C:\Program Files\OpenSSL\bin"
-      - name: 'Install OpenSSL'
-        run: |
-          git clone https://github.com/openssl/openssl.git
-          cd openssl
-          git checkout OpenSSL_1_1_1-stable
-          perl Configure VC-WIN64A
-          nmake
-          nmake install
-          $env:Path += ";C:\Program Files\OpenSSL\bin"          
       - name: "Install Boost"
         run: |
           Invoke-WebRequest "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
