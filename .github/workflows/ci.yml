@@ -104,6 +104,16 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
+      - name: 'Install Catch2'
+        run: |
+          git clone https://github.com/catchorg/Catch2.git
+          cd Catch2
+          mkdir build
+          cd build
+          cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
+          nmake & nmake ( install catch2 inside C:\Program Files (x86)\ )
+          ls  C:\Program Files (x86)\
+          ls C:\Program Files\
       - name: 'Install ZLIP'
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
