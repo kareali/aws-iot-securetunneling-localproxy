@@ -112,5 +112,6 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release ../
-          nmake & nmake install (installs zlib inside C:\Program Files (x86)\ )
+          nmake
+          nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
