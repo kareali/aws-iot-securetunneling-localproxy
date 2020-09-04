@@ -54,11 +54,6 @@ jobs:
         cd build
         cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
         make
-    - uses: actions/upload-artifact@v1
-      with:
-        name: localproxy
-        path: ${{ github.workspace }}/build/bin
-      name: 'Upload Package'
   ubuntu:
     runs-on: ubuntu-18.04
     steps:
@@ -77,11 +72,6 @@ jobs:
         cd boost_1_69_0
         ./bootstrap.sh
         sudo ./b2 install
-    - uses: actions/upload-artifact@v1
-      with:
-        name: boost_169
-        path: ${{ github.workspace }}/boost_1_69_0
-      name: 'Upload boost'
     - name: install protobuf
       working-directory: ${{ github.workspace }}
       run: |
@@ -110,8 +100,16 @@ jobs:
         cd build
         cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
         make
-    - uses: actions/upload-artifact@v1
-      with:
-        name: localproxy
-        path: ${{ github.workspace }}/build/bin
-      name: 'Upload Package'
+  windows:
+    runs-on: windows-2019
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: 'Install ZLIP'
+        run: |
+          git clone -b v1.2.8 https://github.com/madler/zlib.git
+          cd zlib
+          mkdir build & cd build
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
+          nmake & nmake install (installs zlib inside C:\Program Files (x86)\ )
+          $env:Path += ";C:\Program Files (x86)\zlib\bin"
