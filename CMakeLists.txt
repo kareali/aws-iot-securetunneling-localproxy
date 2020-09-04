@@ -88,7 +88,7 @@ add_executable(${AWS_TUNNEL_LOCAL_PROXY_TARGET_NAME} ${MAIN_SOURCES})
 add_executable(${AWS_TUNNEL_LOCAL_PROXY_TEST_NAME} ${TEST_SOURCES})
 
 #libatomic ensured for all platforms except OSX
-if(NOT APPLE)
+if(NOT APPLE AND NOT MSVC)
     target_link_libraries(${AWS_TUNNEL_LOCAL_PROXY_TARGET_NAME} atomic)
     target_link_libraries(${AWS_TUNNEL_LOCAL_PROXY_TEST_NAME} atomic)
 endif()
