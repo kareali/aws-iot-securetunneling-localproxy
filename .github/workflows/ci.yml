@@ -119,6 +119,8 @@ jobs:
           Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
           Expand-Archive protobuf-all-3.6.1.zip
           cd .\protobuf-all-3.6.1\protobuf-3.6.1\cmake\
+          mkdir build
+          cd build
           cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../
           nmake
           nmake install
