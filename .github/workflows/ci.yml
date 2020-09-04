@@ -117,6 +117,11 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files\OpenSSL\bin"
+      - name: 'Upload openSSL'
+        uses: actions/upload-artifact@v1
+        with:
+          name: 'openssl'
+          path: 'C:\Program Files\OpenSSL'
       - name: 'Install Catch2'
         run: |
           git clone https://github.com/catchorg/Catch2.git
@@ -144,6 +149,11 @@ jobs:
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
           .\b2 install
+      - name: 'Upload boost'
+        uses: actions/upload-artifact@v1
+        with:
+          name: 'boost'
+          path: 'C:\Boost'
       - name: "Install Protobuf"
         run: |
           Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
@@ -154,6 +164,11 @@ jobs:
           cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../
           nmake
           nmake install
+      - name: 'Upload protobuf'
+        uses: actions/upload-artifact@v1
+        with:
+          name: 'protobuf'
+          path: 'C:\Program Files (x86)\protobuf'
       - name: 'Checkout'
         uses: actions/checkout@v2
       - name: "Build Local Proxy"
