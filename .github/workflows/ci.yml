@@ -113,8 +113,6 @@ jobs:
           cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
           nmake
           nmake install
-          ls  "C:\Program Files (x86)\"
-          ls "C:\Program Files\"
       - name: 'Install ZLIP'
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
@@ -125,6 +123,8 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
+          ls "C:\Program Files\OpenSSL\bin"
+          $env:Path += ";C:\Program Files\OpenSSL\bin"          
       - name: "Install Boost"
         run: |
           Invoke-WebRequest "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
