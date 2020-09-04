@@ -142,7 +142,7 @@ jobs:
         run: |
           Invoke-WebRequest "https://localproxy-binaries.s3.us-west-2.amazonaws.com/windows/protobuf.zip" -OutFile "protobuf.zip"
           Expand-Archive "protobuf.zip" -Force -DestinationPath "C:\protobuf"
-          ls 'C:\protobuf\
+          ls 'C:\protobuf\'
           $env:Path += ";C:\protobuf\bin"
       - name: 'Checkout'
         uses: actions/checkout@v2
