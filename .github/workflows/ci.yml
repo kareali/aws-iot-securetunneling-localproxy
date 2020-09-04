@@ -116,7 +116,7 @@ jobs:
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
       - name: "Install Protobuf"
         run: |
-          wget "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
+          Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
           Expand-Archive protobuf-all-3.6.1.zip
           cd .\protobuf-all-3.6.1\protobuf-3.6.1\cmake\
           cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../
@@ -124,7 +124,7 @@ jobs:
           nmake install
       - name: "Install Boost"
         run: |
-          wget "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
+          Invoke-WebRequest "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
           Expand-Archive boost_1_69_0.zip
           cd .\boost_1_69_0\boost_1_69_0\
           bootstrap.bat
