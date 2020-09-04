@@ -137,9 +137,7 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           ls
-          cd aws-iot-securetunneling-localproxy
-          ls
           mkdir build
           cd build
-          cmake -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 15 2017 <Win64/Win32>" ..\
+          cmake -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 15 2017 Win64" ..\
           msbuild localproxy.vcxproj -p:Configuration=Release
