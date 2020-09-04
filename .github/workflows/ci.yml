@@ -120,7 +120,7 @@ jobs:
           Expand-Archive boost_1_69_0.zip
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
-          .\b2 install
+    ## .\b2 install
       - name: "Install Protobuf"
         run: |
           Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
