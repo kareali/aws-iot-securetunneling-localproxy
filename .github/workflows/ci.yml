@@ -113,8 +113,8 @@ jobs:
           cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
           nmake
           nmake install
-          ls  C:\Program Files (x86)\
-          ls C:\Program Files\
+          ls  "C:\Program Files (x86)\"
+          ls "C:\Program Files\"
       - name: 'Install ZLIP'
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
