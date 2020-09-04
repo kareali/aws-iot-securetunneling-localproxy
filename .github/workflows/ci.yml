@@ -103,8 +103,6 @@ jobs:
   windows:
     runs-on: windows-2019
     steps:
-#       - name: 'Checkout'
-#         uses: actions/checkout@v2
       - uses: ilammy/msvc-dev-cmd@v1
       - name: 'Install ZLIP'
         run: |
@@ -116,3 +114,27 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
+      - name: "Install Protobuf"
+        run: |
+          wget "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
+          Expand-Archive protobuf-all-3.6.1.zip
+          cd .\protobuf-all-3.6.1\protobuf-3.6.1\cmake\
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../
+          nmake
+          nmake install
+      - name: "Install Boost"
+        run: |
+          wget "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
+          Expand-Archive boost_1_69_0.zip
+          cd .\boost_1_69_0\boost_1_69_0\
+          bootstrap.bat
+          .\b2 install
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      - name: "Build Local Proxy"
+        working-directory: ${{ github.workspace }}
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 15 2017 <Win64/Win32>" ..\
+          msbuild localproxy.vcxproj -p:Configuration=Release
