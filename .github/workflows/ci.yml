@@ -111,7 +111,8 @@ jobs:
           mkdir build
           cd build
           cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
-          nmake & nmake ( install catch2 inside C:\Program Files (x86)\ )
+          nmake
+          nmake install
           ls  C:\Program Files (x86)\
           ls C:\Program Files\
       - name: 'Install ZLIP'
