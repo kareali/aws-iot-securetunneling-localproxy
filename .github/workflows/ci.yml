@@ -151,7 +151,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DBOOST_ROOT="C:\boost" -DCMAKE_PREFIX_PATH="C:\boost;C:\Program Files (x86)\Catch2;C:\protobuf;C:\openssl" -G "Visual Studio 16 2019" ..\
+          cmake -DCMAKE_PREFIX_PATH="C:\boost\boost;C:\Program Files (x86)\Catch2;C:\protobuf;C:\openssl" -G "Visual Studio 16 2019" ..\
           ls
           msbuild localproxy.vcxproj -p:Configuration=Release
           ls bin/Release
