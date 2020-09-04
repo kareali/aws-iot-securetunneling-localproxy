@@ -139,5 +139,5 @@ jobs:
           ls
           mkdir build
           cd build
-          cmake -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 15 2017 Win64" ..\
+          cmake -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 16 2019" ..\
           msbuild localproxy.vcxproj -p:Configuration=Release
