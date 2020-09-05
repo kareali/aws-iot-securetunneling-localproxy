@@ -139,12 +139,12 @@ jobs:
           Expand-Archive "boost_1_69_0.zip" -Force
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat --help
-          .\bootstrap.bat address-model=64 link=static threading=multi runtime-link=static
+          .\bootstrap.bat
           .\b2 --help
           .\b2 --help-options
           .\b2 --help-internal
           .\b2 --help-doc-options
-          .\b2 --build-type=complete --toolset=msvc install
+          .\b2 --build-type=complete --toolset=msvc address-model=64 link=static threading=multi runtime-link=static install
       - name: 'Upload boost'
         uses: actions/upload-artifact@v1
         with:
