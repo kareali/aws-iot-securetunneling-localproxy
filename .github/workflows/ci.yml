@@ -144,7 +144,7 @@ jobs:
           .\b2 --help-options
           .\b2 --help-internal
           .\b2 --help-doc-options
-          .\b2 --build-type=complete --toolset=msvc address-model=64 link=static threading=multi runtime-link=static install
+          .\b2 --build-type=complete --toolset=msvc address-model=64 link=static variant=release threading=multi runtime-link=static install
       - name: 'Upload boost'
         uses: actions/upload-artifact@v1
         with:
