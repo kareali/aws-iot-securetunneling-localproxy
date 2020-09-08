@@ -139,7 +139,7 @@ jobs:
           Expand-Archive "boost_1_69_0.zip" -Force
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
-          .\b2 install define=BOOST_USE_WINAPI_VERSION=0x0A00
+          .\b2 install define=_BOOST_USE_WINAPI_VERSION=0x0A00
       - name: 'Upload boost'
         uses: actions/upload-artifact@v1
         with:
