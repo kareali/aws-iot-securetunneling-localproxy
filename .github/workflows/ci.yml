@@ -104,6 +104,9 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          toolset: 14.2
+          arch: x64
       - name: 'Install OpenSSL'
         run: |
           Invoke-WebRequest "https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip" -OutFile "nasm-2.15.05-win64.zip"
