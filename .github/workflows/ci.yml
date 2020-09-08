@@ -105,7 +105,7 @@ jobs:
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
         with:
-          toolset: 14.1
+          toolset: 14.0
           arch: x64
       - name: 'Install OpenSSL'
         run: |
@@ -142,7 +142,7 @@ jobs:
           Expand-Archive "boost_1_69_0.zip" -Force
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
-          .\b2 toolset=msvc-14.1 address-model=64 install define=BOOST_WINAPI_VERSION_WIN10
+          .\b2 toolset=msvc-14.0 address-model=64 install define=BOOST_WINAPI_VERSION_WIN10
       - name: 'Upload boost'
         uses: actions/upload-artifact@v1
         with:
@@ -161,6 +161,6 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -D_WIN32_WINNT="0x0A00" -DBOOST_USE_WINAPI_VERSION="0x0A00" -D_BOOST_USE_WINAPI_VERSION="0x0A00" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\protobuf;C:\openssl" -G "Visual Studio 16 2019" -T v141 -A x64 ..\
+          cmake -D_WIN32_WINNT="0x0A00" -DBOOST_USE_WINAPI_VERSION="0x0A00" -D_BOOST_USE_WINAPI_VERSION="0x0A00" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\protobuf;C:\openssl" -G "Visual Studio 16 2019" -T v140 -A x64 ..\
           ls
           msbuild localproxy.vcxproj -p:Configuration=Release
