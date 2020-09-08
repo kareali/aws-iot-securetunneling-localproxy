@@ -139,7 +139,7 @@ jobs:
           Expand-Archive "boost_1_69_0.zip" -Force
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
-          .\b2 toolset=msvc-14.2 address-model=64 define="BOOST_USE_WINAPI_VERSION=0x0A00" define="_BOOST_USE_WINAPI_VERSION=0x0A00" install
+          .\b2 address-model=64 install define=BOOST_WINAPI_VERSION_WIN10
       - name: 'Upload boost'
         uses: actions/upload-artifact@v1
         with:
