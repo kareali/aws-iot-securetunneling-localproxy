@@ -10,96 +10,50 @@ env:
   PACKAGE_NAME: aws-iot-securetunneling-localproxy
 
 jobs:
-#   osx:
-#     runs-on: macos-latest
-#     steps:
-#     - name: Install brew dependencies
-#       run: |
-#         brew install openssl zlib cmake wget git
-#     - uses: actions/checkout@v2
-#       name: 'Checkout'
-#     - name: install boost
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         wget https://localproxy-binaries.s3-us-west-2.amazonaws.com/osx/boost_169.zip
-#         unzip boost_169.zip -d boost_169 || :
-#         cd boost_169
-#         chmod +x b2
-#         ./b2 install toolset=clang
-#     - name: install protobuf
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
-#         tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
-#         cd protobuf-3.6.1
-#         mkdir build_make
-#         cd build_make
-#         cmake ../cmake
-#         make
-#         make install
-#     - name: install Catch2
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         git clone https://github.com/catchorg/Catch2.git
-#         cd Catch2
-#         mkdir build
-#         cd build
-#         cmake ../
-#         make
-#         make install
-#     - name: Building ${{ env.PACKAGE_NAME }}
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         mkdir build
-#         cd build
-#         cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
-#         make
-#   ubuntu:
-#     runs-on: ubuntu-18.04
-#     steps:
-#     - name: Install apt-get dependencies
-#       run: |
-#         sudo apt-get install -y build-essential git python3-dev
-#         sudo apt-get install -y wget tar zlibc libssl-dev openssl cmake python-dev
-#         sudo apt-get clean -y
-#     - uses: actions/checkout@v2
-#       name: 'Checkout'
-#     - name: install boost
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
-#         tar xzvf /tmp/boost.tar.gz
-#         cd boost_1_69_0
-#         ./bootstrap.sh
-#         sudo ./b2 install
-#     - name: install protobuf
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
-#         tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
-#         cd protobuf-3.6.1
-#         mkdir build_make
-#         cd build_make
-#         cmake ../cmake
-#         make
-#         sudo make install
-#     - name: install Catch2
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         git clone https://github.com/catchorg/Catch2.git
-#         cd Catch2
-#         mkdir build
-#         cd build
-#         cmake ../
-#         make
-#         sudo make install
-#     - name: Building ${{ env.PACKAGE_NAME }}
-#       working-directory: ${{ github.workspace }}
-#       run: |
-#         mkdir build
-#         cd build
-#         cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
-#         make
+  osx:
+    runs-on: macos-latest
+    steps:
+    - name: Install brew dependencies
+      run: |
+        brew install openssl zlib cmake wget git
+    - name: install boost
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
+        tar xzvf /tmp/boost.tar.gz
+        cd boost_1_69_0
+        ./bootstrap.sh --with-toolset=clang
+        ./b2 install toolset=clang
+    - name: install protobuf
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
+        tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
+        cd protobuf-3.6.1
+        mkdir build_make
+        cd build_make
+        cmake ../cmake
+        make
+        make install
+    - name: install Catch2
+      working-directory: ${{ github.workspace }}
+      run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        mkdir build
+        cd build
+        cmake ../
+        make
+        make install
+    - uses: actions/checkout@v2
+      name: 'Checkout'
+    - name: Building ${{ env.PACKAGE_NAME }}
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
+        make
   windows:
     runs-on: windows-2019
     steps:
@@ -112,10 +66,13 @@ jobs:
           Invoke-WebRequest "https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip" -OutFile "nasm-2.15.05-win64.zip"
           Expand-Archive "nasm-2.15.05-win64.zip" -Force -DestinationPath "C:\NASM"
           $env:Path += ";C:\NASM\nasm-2.15.05\"
-          Invoke-WebRequest "https://localproxy-binaries.s3.us-west-2.amazonaws.com/windows/openssl.zip" -OutFile "openssl.zip"
-          Expand-Archive "openssl.zip" -Force -DestinationPath "C:\openssl"
-          ls 'C:\openssl'
-          $env:Path += ";C:\openssl\bin"
+          git clone https://github.com/openssl/openssl.git
+          cd openssl
+          git checkout OpenSSL_1_1_1-stable
+          perl Configure VC-WIN64A
+          nmake
+          nmake install
+          $env:Path += ";C:\Program Files\OpenSSL\bin"
       - name: 'Install Catch2'
         run: |
           git clone https://github.com/catchorg/Catch2.git
@@ -125,7 +82,7 @@ jobs:
           cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
           nmake
           nmake install
-      - name: 'Install ZLIP'
+      - name: 'Install zlib'
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
           cd zlib
@@ -135,7 +92,6 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
-          ls "C:\Program Files\OpenSSL\bin"
       - name: "Install Boost"
         run: |
           Invoke-WebRequest "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
@@ -143,17 +99,17 @@ jobs:
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
           .\b2 toolset=msvc-14.1 address-model=64 install define=BOOST_WINAPI_VERSION_WIN10
-      - name: 'Upload boost'
-        uses: actions/upload-artifact@v1
-        with:
-          name: 'boost'
-          path: 'C:\Boost'
       - name: "Install Protobuf"
         run: |
-          Invoke-WebRequest "https://localproxy-binaries.s3.us-west-2.amazonaws.com/windows/protobuf.zip" -OutFile "protobuf.zip"
-          Expand-Archive "protobuf.zip" -Force -DestinationPath "C:\protobuf"
-          ls 'C:\protobuf\'
-          $env:Path += ";C:\protobuf\bin"
+          Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
+          Expand-Archive protobuf-all-3.6.1.zip
+          cd .\protobuf-all-3.6.1\protobuf-3.6.1\cmake\
+          mkdir build
+          cd build
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Dprotobuf_MSVC_STATIC_RUNTIME=OFF ../
+          nmake
+          nmake install
+          $env:Path += ";C:\Program Files (x86)\protobuf\bin"
       - name: 'Checkout'
         uses: actions/checkout@v2
       - name: "Build Local Proxy"
@@ -161,6 +117,5 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -D_WIN32_WINNT="0x0A00" -DBOOST_USE_WINAPI_VERSION="0x0A00" -D_BOOST_USE_WINAPI_VERSION="0x0A00" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\protobuf;C:\openssl" -G "Visual Studio 16 2019" -A x64 ..\
-          ls
+          cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\openssl" -G "Visual Studio 16 2019" -A x64 ..\
           msbuild localproxy.vcxproj -p:Configuration=Release
