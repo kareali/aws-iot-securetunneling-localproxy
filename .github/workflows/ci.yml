@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - '*'
-      - '!master'
 
 env:
   PACKAGE_NAME: aws-iot-securetunneling-localproxy
@@ -16,7 +15,7 @@ jobs:
     - name: Install brew dependencies
       run: |
         brew install openssl zlib cmake wget git
-    - name: install boost
+    - name: Install boost
       working-directory: ${{ github.workspace }}
       run: |
         wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
@@ -24,7 +23,7 @@ jobs:
         cd boost_1_69_0
         ./bootstrap.sh --with-toolset=clang
         ./b2 install toolset=clang
-    - name: install protobuf
+    - name: Install protobuf
       working-directory: ${{ github.workspace }}
       run: |
         wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
@@ -35,7 +34,7 @@ jobs:
         cmake ../cmake
         make
         make install
-    - name: install Catch2
+    - name: Install Catch2
       working-directory: ${{ github.workspace }}
       run: |
         git clone https://github.com/catchorg/Catch2.git
@@ -47,7 +46,7 @@ jobs:
         make install
     - uses: actions/checkout@v2
       name: 'Checkout'
-    - name: Building ${{ env.PACKAGE_NAME }}
+    - name: Building localproxy
       working-directory: ${{ github.workspace }}
       run: |
         mkdir build
@@ -62,9 +61,7 @@ jobs:
         sudo apt-get install -y build-essential git python3-dev
         sudo apt-get install -y wget tar zlibc libssl-dev openssl cmake python-dev
         sudo apt-get clean -y
-    - uses: actions/checkout@v2
-      name: 'Checkout'
-    - name: install boost
+    - name: Install boost
       working-directory: ${{ github.workspace }}
       run: |
         wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
@@ -72,7 +69,7 @@ jobs:
         cd boost_1_69_0
         ./bootstrap.sh
         sudo ./b2 install
-    - name: install protobuf
+    - name: Install protobuf
       working-directory: ${{ github.workspace }}
       run: |
         wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
@@ -93,7 +90,9 @@ jobs:
         cmake ../
         make
         sudo make install
-    - name: Building ${{ env.PACKAGE_NAME }}
+    - name: 'Checkout'
+      uses: actions/checkout@v2
+    - name: Building localproxy
       working-directory: ${{ github.workspace }}
       run: |
         mkdir build
@@ -103,11 +102,12 @@ jobs:
   windows:
     runs-on: windows-2019
     steps:
-      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup developer command prompt
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           toolset: 14.1
           arch: x64
-      - name: 'Install OpenSSL'
+      - name: Install OpenSSL
         run: |
           Invoke-WebRequest "https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip" -OutFile "nasm-2.15.05-win64.zip"
           Expand-Archive "nasm-2.15.05-win64.zip" -Force -DestinationPath "C:\NASM"
@@ -119,7 +119,7 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files\OpenSSL\bin"
-      - name: 'Install Catch2'
+      - name: Install Catch2
         run: |
           git clone https://github.com/catchorg/Catch2.git
           cd Catch2
@@ -128,7 +128,7 @@ jobs:
           cmake -DBUILD_TESTING=OFF -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ../
           nmake
           nmake install
-      - name: 'Install zlib'
+      - name: Install zlib
         run: |
           git clone -b v1.2.8 https://github.com/madler/zlib.git
           cd zlib
@@ -138,14 +138,14 @@ jobs:
           nmake
           nmake install
           $env:Path += ";C:\Program Files (x86)\zlib\bin"
-      - name: "Install Boost"
+      - name: Install boost
         run: |
           Invoke-WebRequest "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.zip" -OutFile "boost_1_69_0.zip"
           Expand-Archive "boost_1_69_0.zip" -Force
           cd .\boost_1_69_0\boost_1_69_0\
           .\bootstrap.bat
           .\b2 toolset=msvc-14.1 address-model=64 install define=BOOST_WINAPI_VERSION_WIN10
-      - name: "Install Protobuf"
+      - name: Install protobuf
         run: |
           Invoke-WebRequest "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.zip" -OutFile "protobuf-all-3.6.1.zip"
           Expand-Archive protobuf-all-3.6.1.zip
@@ -158,10 +158,10 @@ jobs:
           $env:Path += ";C:\Program Files (x86)\protobuf\bin"
       - name: 'Checkout'
         uses: actions/checkout@v2
-      - name: "Build Local Proxy"
+      - name: Build localproxy 
         working-directory: ${{ github.workspace }}
         run: |
           mkdir build
           cd build
-          cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\openssl" -G "Visual Studio 16 2019" -A x64 ..\
+          cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_PREFIX_PATH="C:\Boost;C:\Program Files (x86)\Catch2;C:\Program Files (x86)\protobuf;C:\Program Files\OpenSSL" -G "Visual Studio 16 2019" -A x64 ..\
           msbuild localproxy.vcxproj -p:Configuration=Release
