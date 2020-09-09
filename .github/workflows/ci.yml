@@ -54,6 +54,52 @@ jobs:
         cd build
         cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
         make
+  ubuntu:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Install apt-get dependencies
+      run: |
+        sudo apt-get install -y build-essential git python3-dev
+        sudo apt-get install -y wget tar zlibc libssl-dev openssl cmake python-dev
+        sudo apt-get clean -y
+    - uses: actions/checkout@v2
+      name: 'Checkout'
+    - name: install boost
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
+        tar xzvf /tmp/boost.tar.gz
+        cd boost_1_69_0
+        ./bootstrap.sh
+        sudo ./b2 install
+    - name: install protobuf
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
+        tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
+        cd protobuf-3.6.1
+        mkdir build_make
+        cd build_make
+        cmake ../cmake
+        make
+        sudo make install
+    - name: install Catch2
+      working-directory: ${{ github.workspace }}
+      run: |
+        git clone https://github.com/catchorg/Catch2.git
+        cd Catch2
+        mkdir build
+        cd build
+        cmake ../
+        make
+        sudo make install
+    - name: Building ${{ env.PACKAGE_NAME }}
+      working-directory: ${{ github.workspace }}
+      run: |
+        mkdir build
+        cd build
+        cmake .. -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@1.1/1.1.1g/ -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@1.1/1.1.1g/lib/
+        make
   windows:
     runs-on: windows-2019
     steps:
