@@ -45,7 +45,7 @@ find_package(Threads)
 # Generate protobuf files               #
 #########################################
 set_property(GLOBAL PROPERTY PROTOBUF_USE_STATIC_LIBS ON)  #this flag doesn't actually seem to work yet but it's documented
-find_package(Protobuf 3.6.1 REQUIRED)
+find_package(Protobuf 3.17.3 REQUIRED)
 string(REPLACE ${CMAKE_SHARED_LIBRARY_SUFFIX} ${CMAKE_STATIC_LIBRARY_SUFFIX} Protobuf_LITE_STATIC_LIBRARY ${Protobuf_LITE_LIBRARY})
 include_directories(${Protobuf_INCLUDE_DIRS})
 
@@ -69,7 +69,7 @@ find_package(Catch2 REQUIRED)
 set_property(GLOBAL PROPERTY Boost_USE_STATIC_LIBS ON)
 set_property(GLOBAL PROPERTY Boost_USE_DEBUG_RUNTIME OFF)
 #set_property(GLOBAL PROPERTY Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.68.0 REQUIRED COMPONENTS system log log_setup thread program_options date_time filesystem)
+find_package(Boost 1.76.0 REQUIRED COMPONENTS system log log_setup thread program_options date_time filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 foreach(BOOST_LIB ${Boost_LIBRARIES})
     string(REPLACE ${CMAKE_SHARED_LIBRARY_SUFFIX} ${CMAKE_STATIC_LIBRARY_SUFFIX} BOOST_STATIC_LIB ${BOOST_LIB})
@@ -80,11 +80,12 @@ endforeach()
 # Target : Build aws-tunnel-local-proxy #
 #########################################
 file(GLOB ALL_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB TEST_CODE ${PROJECT_SOURCE_DIR}/test/*.cpp)
 
-set(UTIL_SOURCE ${PROJECT_SOURCE_DIR}/src/config/ConfigFile.cpp)
-set(CORE_SOURCES ${PROJECT_SOURCE_DIR}/src/TcpAdapterProxy.cpp ${PROJECT_SOURCE_DIR}/src/ProxySettings.cpp ${PROTO_HDRS} ${PROTO_SRCS})
+set(UTIL_SOURCE ${PROJECT_SOURCE_DIR}/src/config/ConfigFile.cpp ${PROJECT_SOURCE_DIR}/src/Url.cpp)
+set(CORE_SOURCES ${PROJECT_SOURCE_DIR}/src/TcpAdapterProxy.cpp ${PROJECT_SOURCE_DIR}/src/ProxySettings.cpp ${PROJECT_SOURCE_DIR}/src/WebProxyAdapter.cpp ${PROTO_HDRS} ${PROTO_SRCS} ${PROJECT_SOURCE_DIR}/src/WebSocketStream.cpp)
 set(MAIN_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp ${CORE_SOURCES} ${UTIL_SOURCE})
-set(TEST_SOURCES ${PROJECT_SOURCE_DIR}/test/AdapterTests.cpp ${CORE_SOURCES} ${UTIL_SOURCE} ${PROJECT_SOURCE_DIR}/test/TestWebsocketServer.cpp)
+set(TEST_SOURCES ${TEST_CODE} ${CORE_SOURCES} ${UTIL_SOURCE})
 
 add_executable(${AWS_TUNNEL_LOCAL_PROXY_TARGET_NAME} ${MAIN_SOURCES})
 add_executable(${AWS_TUNNEL_LOCAL_PROXY_TEST_NAME} ${TEST_SOURCES})
@@ -112,4 +113,3 @@ target_link_libraries(${AWS_TUNNEL_LOCAL_PROXY_TEST_NAME} ${Protobuf_LITE_STATIC
 
 set_property(TARGET ${AWS_TUNNEL_LOCAL_PROXY_TARGET_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS ${CUSTOM_COMPILER_FLAGS})
 set_property(TARGET ${AWS_TUNNEL_LOCAL_PROXY_TEST_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS ${TEST_COMPILER_FLAGS})
-

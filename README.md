@@ -23,7 +23,7 @@ This code enables tunneling of a single threaded TCP client / server socket inte
 `./docker-build.sh`
 
 After the Docker build completes, run `./docker-run.sh` to open a shell inside the container created in the
-previous step. Here you can find both the `localproxy` and `localproxytest` binaries.
+previous step, or you can run `./docker-run.sh -p <port_number>` to expose a port from the docker container. Here you can find both the `localproxy` and `localproxytest` binaries. Note that when the localproxy runs in source mode, it binds by default to `localhost`, If you want to access the localproxy from outside the container, make sure to use the option `-b 0.0.0.0` when you run the localproxy from the container so that it binds to `0.0.0.0` since `localhost` can not be access from outside the container.
 
 ---
 
@@ -34,8 +34,8 @@ previous step. Here you can find both the `localproxy` and `localproxytest` bina
 * C++ 14 compiler
 * CMake 3.6+
 * Development libraries required:
-    * Boost 1.68 or 1.69
-    * Protobuf 3.6.x
+    * Boost 1.76
+    * Protobuf 3.17.x
     * zlib
     * OpenSSL 1.0+
     * Catch2 test framework
@@ -54,26 +54,26 @@ Ubuntu example:
 Fedora example:
 `dnf install zlib`
 
-    wget https://www.zlib.net/zlib-1.2.11.tar.gz -O /tmp/zlib-1.2.11.tar.gz
-    tar xzvf /tmp/zlib-1.2.11.tar.gz
-    cd zlib-1.2.11
+    wget https://www.zlib.net/zlib-1.2.12.tar.gz -O /tmp/zlib-1.2.12.tar.gz
+    tar xzvf /tmp/zlib-1.2.12.tar.gz
+    cd zlib-1.2.12
     ./configure
     make
     sudo make install
 
 #### 2. Download and install Boost dependency
 
-    wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz
+    wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O /tmp/boost.tar.gz
     tar xzvf /tmp/boost.tar.gz
-    cd boost_1_69_0
+    cd boost_1_76_0
     ./bootstrap.sh
-    sudo ./b2 install
+    sudo ./b2 install link=static
 
 #### 3. Download and install Protobuf dependency
 
-    wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz
-    tar xzvf /tmp/protobuf-all-3.6.1.tar.gz
-    cd protobuf-3.6.1
+    wget https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protobuf-all-3.17.3.tar.gz -O /tmp/protobuf-all-3.17.3.tar.gz
+    tar xzvf /tmp/protobuf-all-3.17.3.tar.gz
+    cd protobuf-3.17.3
     mkdir build
     cd build
     cmake ../cmake
@@ -103,7 +103,7 @@ Run the ./Configure command without any arguments to check the available platfor
 
 #### 5. Download and install Catch2 test framework
 
-    git clone --branch v2.13.2 https://github.com/catchorg/Catch2.git
+    git clone --branch v2.13.6 https://github.com/catchorg/Catch2.git
     cd Catch2
     mkdir build
     cd build
@@ -268,6 +268,10 @@ Example 3:
     aws iotsecuretunneling open-tunnel 
 
 In this example, no service ID is used. Backward compatibility is supported.
+
+### HTTP proxy Support
+
+The local proxy relies on the HTTP tunneling mechanism described by the [HTTP/1.1 specification](https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.6). To comply with the specifications, your web proxy must allow devices to use the CONNECT method. For more details on how that works and how configure it properly, Please refer to "[Configure local proxy for devices that use web proxy](https://docs.aws.amazon.com/iot/latest/developerguide/configure-local-proxy-web-proxy.html)"
 
 ### Security Considerations
 

@@ -1,38 +1,40 @@
-# FROM ubuntu:18.04
-FROM ubuntu:18.04 as builder
+# FROM amazonlinux:latest
+FROM amazonlinux:latest as builder
+ARG OPENSSL_CONFIG
 
 # Install Prerequisites
 
-RUN apt update && apt upgrade -y && \
-	apt install -y git libboost-all-dev autoconf automake \
-	wget libtool curl make g++ unzip cmake libssl-dev
+RUN yum check-update; yum upgrade -y && \
+	yum install -y git boost-devel autoconf automake \
+	wget libtool curl make gcc-c++ unzip cmake3 openssl11-devel \
+	python-devel which
 
 # Install Dependencies
 
 RUN mkdir /home/dependencies
 WORKDIR /home/dependencies
 
-RUN wget https://www.zlib.net/zlib-1.2.11.tar.gz -O /tmp/zlib-1.2.11.tar.gz && \
-	tar xzvf /tmp/zlib-1.2.11.tar.gz && \
-	cd zlib-1.2.11 && \
+RUN wget https://www.zlib.net/zlib-1.2.12.tar.gz -O /tmp/zlib-1.2.12.tar.gz && \
+	tar xzvf /tmp/zlib-1.2.12.tar.gz && \
+	cd zlib-1.2.12 && \
 	./configure && \
 	make && \
 	make install && \
 	cd /home/dependencies
 
-RUN wget https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.gz -O /tmp/boost.tar.gz && \
+RUN wget https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz -O /tmp/boost.tar.gz && \
 	tar xzvf /tmp/boost.tar.gz && \
-	cd boost_1_69_0 && \
+	cd boost_1_76_0 && \
 	./bootstrap.sh && \
-	./b2 install && \
+	./b2 install link=static && \
 	cd /home/dependencies
 
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz -O /tmp/protobuf-all-3.6.1.tar.gz && \
-	tar xzvf /tmp/protobuf-all-3.6.1.tar.gz && \
-	cd protobuf-3.6.1 && \
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protobuf-all-3.17.3.tar.gz -O /tmp/protobuf-all-3.17.3.tar.gz && \
+	tar xzvf /tmp/protobuf-all-3.17.3.tar.gz && \
+	cd protobuf-3.17.3 && \
 	mkdir build && \
 	cd build && \
-	cmake ../cmake && \
+	cmake3 ../cmake && \
 	make && \
 	make install && \
 	cd /home/dependencies
@@ -40,16 +42,16 @@ RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/pr
 RUN git clone https://github.com/openssl/openssl.git && \
 	cd openssl && \
 	git checkout OpenSSL_1_1_1-stable && \
-	./Configure linux-generic64 && \
+	./Configure $OPENSSL_CONFIG && \
 	make depend && \
 	make all && \
 	cd /home/dependencies
 
-RUN git clone --branch v2.13.2 https://github.com/catchorg/Catch2.git && \
+RUN git clone --branch v2.13.6 https://github.com/catchorg/Catch2.git && \
 	cd Catch2 && \
 	mkdir build && \
 	cd build && \
-	cmake ../ && \
+	cmake3 ../ && \
 	make && \
 	make install && \
 	cd /home/dependencies
@@ -58,7 +60,7 @@ RUN git clone https://github.com/aws-samples/aws-iot-securetunneling-localproxy 
 	cd aws-iot-securetunneling-localproxy && \
 	mkdir build && \
 	cd build && \
-	cmake ../ && \
+	cmake3 ../ && \
 	make
 
 # If you'd like to use this Dockerfile to build your LOCAL revisions to the
@@ -87,19 +89,19 @@ WORKDIR /home/aws-iot-securetunneling-localproxy/
 
 ## Actual docker image
 
-FROM ubuntu:18.04
+FROM amazonlinux:latest
 
 # Install openssl for libssl dependency.
 
-RUN apt update && apt upgrade -y && \
-    apt install -y openssl wget && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
+RUN yum check-update; yum upgrade -y && \
+    yum install -y openssl11 wget libatomic && \
+    rm -rf /var/cache/yum && \
+    yum clean all
 
 RUN mkdir -p /home/aws-iot-securetunneling-localproxy/certs && \
     cd /home/aws-iot-securetunneling-localproxy/certs && \
     wget https://www.amazontrust.com/repository/AmazonRootCA1.pem && \
-	openssl rehash ./
+	openssl11 rehash ./
 
 # # Copy the binaries from builder stage.
 
